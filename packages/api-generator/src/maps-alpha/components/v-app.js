@@ -1,12 +1,10 @@
 module.exports = {
-  mixins: [
-    'themeable',
-  ],
+  composables: [],
   props: [
     {
-      name: 'id',
+      name: 'theme',
       type: 'string',
-      default: "'app'",
+      default: 'undefined',
       source: 'v-app',
     },
   ],

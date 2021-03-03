@@ -1,12 +1,6 @@
 module.exports = {
-  mixins: [],
+  composables: [],
   props: [
-    {
-      name: 'dark',
-      type: 'boolean',
-      default: 'false',
-      source: 'themeable',
-    },
     {
       name: 'inset',
       type: 'boolean',
@@ -14,10 +8,22 @@ module.exports = {
       source: 'v-divider',
     },
     {
-      name: 'light',
-      type: 'boolean',
-      default: 'false',
-      source: 'themeable',
+      name: 'length',
+      type: [
+        'number',
+        'string',
+      ],
+      default: 'undefined',
+      source: 'v-divider',
+    },
+    {
+      name: 'thickness',
+      type: [
+        'number',
+        'string',
+      ],
+      default: 'undefined',
+      source: 'v-divider',
     },
     {
       name: 'vertical',

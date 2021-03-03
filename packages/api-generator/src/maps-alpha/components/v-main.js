@@ -1,14 +1,13 @@
 module.exports = {
-  mixins: [],
-  props: [
+  composables: [
+    'tag',
+  ],
+  props: [],
+  slots: [
     {
-      name: 'tag',
-      type: 'string',
-      default: "'main'",
-      source: 'v-main',
+      name: 'default',
     },
   ],
-  slots: [],
   events: [],
   functions: [],
 }

@@ -1,6 +1,7 @@
 // const Vue = require('vue')
 // const Vuetify = require('vuetify')
 // const { components: excludes } = require('./helpers/excludes')
+const { sortBy } = require('lodash')
 const { camelCase } = require('./helpers/text')
 const { getComponentList, parseSassVariables } = require('./helpers/parsing')
 const deepmerge = require('./helpers/merge')
@@ -19,12 +20,7 @@ const loadLocale = (componentName, locale, fallback = {}) => {
 const loadMap = (componentName, group, fallback = {}) => {
   try {
     const map = require(`./maps-alpha/${group}/${componentName}`)
-    const combined = Object.assign(fallback, { ...map })
-
-    // Make sure things are sorted
-    const categories = ['slots', 'events', 'functions', 'mixins']
-    categories.forEach(category => combined[category].sort((a, b) => a.name.localeCompare(b.name)))
-    return combined
+    return Object.assign(fallback, { ...map })
   } catch {
     return fallback
   }
@@ -44,7 +40,6 @@ const addComponentApiDescriptions = (componentName, api, locales) => {
     const sources = [
       loadLocale(componentName, localeName),
       ...getSources(api).map(source => loadLocale(source, localeName)),
-      ...api.mixins.map(mixin => loadLocale(mixin, localeName)),
       loadLocale('generic', localeName),
     ]
 
@@ -105,11 +100,26 @@ const addGenericApiDescriptions = (name, api, locales, categories) => {
 
 const getComponentApi = (componentName, locales) => {
   // if (!component) throw new Error(`Could not find component: ${componentName}`)
+  const componentMap = loadMap(componentName, 'components', { composables: [], props: [], slots: [], events: [], functions: [] })
 
-  const componentMap = loadMap(componentName, 'components', { props: [], slots: [], events: [], functions: [], mixins: [] })
+  // get composable props
+  const composableProps = []
+  for (const composable of componentMap.composables) {
+    const props = composable.slice(0, 2) === 'v-'
+      ? getComponentApi(composable, locales).props
+      : loadMap(composable, 'composables', { props: [] }).props
+    composableProps.push(...props)
+  }
+
   const sassVariables = parseSassVariables(componentName)
 
-  const api = deepmerge(componentMap, { name: componentName, sass: sassVariables, component: true })
+  const api = deepmerge(componentMap, { name: componentName, props: composableProps, sass: sassVariables, component: true })
+
+  // Make sure things are sorted
+  const categories = ['props', 'slots', 'events', 'functions']
+  for (const category of categories) {
+    componentMap[category] = sortBy(componentMap[category], 'name')
+  }
 
   return addComponentApiDescriptions(componentName, api, locales)
 }

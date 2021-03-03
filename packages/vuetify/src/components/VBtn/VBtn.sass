@@ -16,12 +16,12 @@
   text-indent: $button-text-letter-spacing
   text-transform: $button-text-transform
   transition-property: box-shadow, transform, opacity
-  transition: 0.28s map-get($transition, 'fast-out-slow-in')
+  transition: 0.28s $standard-easing
   user-select: none
   vertical-align: $button-vertical-align
 
   @at-root
-    +sizes('v-btn', $button-query)
+    +sizes('v-btn', $button-sizes)
     +density('v-btn', 'height', $button-density)
 
   +states('.v-btn__overlay')
@@ -35,7 +35,7 @@
       +density('v-btn', ('width', 'height'), $button-icon-density)
 
   &--border
-    +border($button-border)
+    +border($button-border-color, $button-border-style, $button-border-width)
 
   &--elevated
     +elevation(map-get($button-elevation, 'default'))

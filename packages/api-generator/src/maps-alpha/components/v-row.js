@@ -1,5 +1,7 @@
 module.exports = {
-  mixins: [],
+  composables: [
+    'tag',
+  ],
   props: [
     {
       name: 'align',
@@ -101,12 +103,6 @@ module.exports = {
       name: 'no-gutters',
       type: 'boolean',
       default: 'false',
-      source: 'v-row',
-    },
-    {
-      name: 'tag',
-      type: 'string',
-      default: "'div'",
       source: 'v-row',
     },
   ],
